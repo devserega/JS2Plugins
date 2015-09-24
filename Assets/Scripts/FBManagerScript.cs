@@ -47,16 +47,16 @@ public class FBManagerScript : MonoBehaviour {
 	}
 	
 	public void FBShare(){
-		
+		if (FB.IsLoggedIn) {
+			this.StartCoroutine (this.TakeScreenshot ());
+		}
 	}
 	
-	private void CallFBLogin()
-	{
+	private void CallFBLogin(){
 		FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email", "user_friends" }, this.HandleResult);
 	}
 	
-	protected void HandleResult(IResult result)
-	{
+	protected void HandleResult(IResult result){
 		if (result == null)
 		{
 			//this.LastResponse = "Null Response\n";
@@ -130,38 +130,22 @@ public class FBManagerScript : MonoBehaviour {
 		//Debug.Log ("TEST");
 	}
 	
-	private IEnumerator TakeScreenshot() 
+	private IEnumerator TakeScreenshot()
 	{
 		yield return new WaitForEndOfFrame();
-		
-		var width = Screen.width;
-		var height = Screen.height;
-		var tex = new Texture2D(width, height, TextureFormat.RGB24, false);
-		// Read screen contents into the texture
-		tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-		tex.Apply();
-		byte[] screenshot = tex.EncodeToPNG();
-		
-		var wwwForm = new WWWForm();
-		wwwForm.AddBinaryData("image", screenshot, "Screenshot.png");
-		
-		//FB.API("me/photos", Facebook.Unity.HttpMethod.POST, APICallback, wwwForm);
-	}
-	
-	//void APICallback(FBResult result)
-	//{
-		/*
-		Util.Log("APICallback");
-		if (result.Error != null)
-		{
-			Util.LogError(result.Error);
-			// Let's just try again
-			FB.API("/me?fields=id,first_name,friends.limit(100).fields(first_name,id)", Facebook.Unity.HttpMethod.GET, APICallback);
-			return;
-		}
-		
-		profile = Util.DeserializeJSONProfile(result.Text);
-		GameStateManager.Username = profile["first_name"];
-		friends = Util.DeserializeJSONFriends(result.Text);*/
-	//}
+
+     	var width = Screen.width;
+      	var height = Screen.height;
+     	var tex = new Texture2D(width, height, TextureFormat.RGB24, false);
+
+       	// Read screen contents into the texture
+        tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+        tex.Apply();
+        byte[] screenshot = tex.EncodeToPNG();
+
+        var wwwForm = new WWWForm();
+        wwwForm.AddBinaryData("image", screenshot, "InteractiveConsole.png");
+        wwwForm.AddField("message", "Test");
+        FB.API("me/photos", HttpMethod.POST, this.HandleResult, wwwForm);
+    }
 }
