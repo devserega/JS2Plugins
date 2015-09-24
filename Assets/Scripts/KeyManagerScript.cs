@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class KeyManagerScript : MonoBehaviour {
-
+	
 	// Use this for initialization
 	void Start () {
-	
+		
 	}
 	
 	// Update is called once per frame
@@ -13,7 +13,7 @@ public class KeyManagerScript : MonoBehaviour {
 		bool down = Input.GetKeyDown(KeyCode.Escape);
 		bool held = Input.GetKey(KeyCode.Escape);
 		bool up = Input.GetKeyUp(KeyCode.Escape);
-	
+		
 		if (down) {
 			Debug.Log("DOWN");
 			Application.Quit();
@@ -22,7 +22,7 @@ public class KeyManagerScript : MonoBehaviour {
 		} else if (up) {
 			//Debug.Log("UP");
 		} else {
-
+			
 		}
 	}
 }
